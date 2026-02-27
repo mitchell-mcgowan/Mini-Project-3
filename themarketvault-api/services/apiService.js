@@ -1,7 +1,7 @@
 const axios = require("axios");
 const Coin = require("../models/coinModel");
 
-const fetchAndStroeCoins = async () => {
+const fetchAndStoreCoins = async () => {
   try {
     const response = await axios.get(
       "https://api.coingecko.com/api/v3/coins/markets",
@@ -11,13 +11,14 @@ const fetchAndStroeCoins = async () => {
           order: "market_cap_desc",
           per_page: 50,
           page: 1,
+          sparkline: false,
         },
       },
     );
 
-    const coin = response.data;
+    const coins = response.data;
 
-    for (let coin of coins) {
+    for (const coin of coins) {
       await Coin.findOneAndUpdate(
         { apiId: coin.id },
         {
@@ -27,7 +28,7 @@ const fetchAndStroeCoins = async () => {
           currentPrice: coin.current_price,
           marketCap: coin.market_cap,
           totalVolume: coin.total_volume,
-          priceChange24h: coin.price_change_24th,
+          priceChange24h: coin.price_change_24h,
           lastUpdated: coin.last_updated,
         },
         { upsert: true, new: true },
@@ -40,4 +41,4 @@ const fetchAndStroeCoins = async () => {
   }
 };
 
-module.exports = fetchAndStroeCoins;
+module.exports = fetchAndStoreCoins;
