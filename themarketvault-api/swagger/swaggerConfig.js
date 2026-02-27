@@ -1,4 +1,4 @@
-const swaggerJsDoc = require("swagger_jsdoc");
+const swaggerJsDoc = require("swagger-jsdoc");
 
 const options = {
   definition: {
